@@ -22,30 +22,10 @@ export const CommerceEventType: {
     PromotionView: number;
 };
 
-export const Store: {
-};
-
 export const config: {
 };
 
-export const isIOS: boolean;
-
-export const preInit: {
-    featureFlags: {
-    };
-    forwarderConstructors: any[];
-    integrationDelays: {
-    };
-    readyQueue: any[];
-};
-
-export function addForwarder(forwarder: any): void;
-
-export function configurePixel(settings: any): void;
-
 export function endSession(): void;
-
-export function generateHash(name: any): any;
 
 export function getAppName(): any;
 
@@ -71,13 +51,9 @@ export function logPageView(eventName: any, attrs: any, customFlags: any): void;
 
 export function ready(f: any): void;
 
-export function reset(config: any, keepPersistence: any): void;
-
 export function setAppName(name: any): void;
 
 export function setAppVersion(version: any): void;
-
-export function setIntegrationAttribute(integrationId: any, attrs: any): void;
 
 export function setLogLevel(newLogLevel: any): void;
 
@@ -118,22 +94,9 @@ export namespace EventType {
     const UserContent: number;
 
     const UserPreference: number;
-
-    function getName(id: any): any;
-
 }
 
 export namespace Identity {
-    const HTTPCodes: {
-        activeIdentityRequest: number;
-        activeSession: number;
-        loggingDisabledOrMissingAPIKey: number;
-        nativeIdentityRequest: number;
-        noHttpCoverage: number;
-        tooManyRequests: number;
-        validationIssue: number;
-    };
-
     function aliasUsers(aliasRequest: any, callback: any): void;
 
     function createAliasRequest(sourceUser: any, destinationUser: any): any;
@@ -179,14 +142,7 @@ export namespace IdentityType {
 
     const Yahoo: number;
 
-    function getIdentityName(identityType: any): any;
-
-    function getIdentityType(identityName: any): any;
-
     function getName(identityType: any): any;
-
-    function isValid(identityType: any): any;
-
 }
 
 export namespace ProductActionType {
@@ -224,33 +180,6 @@ export namespace PromotionType {
     const PromotionView: number;
 
     const Unknown: number;
-
-    function getExpansionName(id: any): any;
-
-    function getName(id: any): any;
-
-}
-
-export namespace Validators {
-    function isFunction(fn: any): any;
-
-    function isStringOrNumber(value: any): any;
-
-    function isValidAttributeValue(value: any): any;
-
-    function isValidKeyValue(key: any): any;
-
-    function validateIdentities(identityApiData: any, method: any): any;
-
-}
-
-export namespace cookieSyncManager {
-    function attemptCookieSync(previousMPID: any, mpid: any): void;
-
-    function replaceAmp(string: any): any;
-
-    function replaceMPID(string: any, mpid: any): any;
-
 }
 
 export namespace eCommerce {
@@ -286,113 +215,4 @@ export namespace eCommerce {
         function remove(product: any, logEventBoolean: any): void;
 
     }
-
-}
-
-export namespace persistence {
-    const forwardingStatsBatches: {
-        forwardingStatsEventQueue: any[];
-        uploadsTable: {
-        };
-    };
-
-    function createCookieString(string: any): any;
-
-    function decodeCookies(cookie: any): any;
-
-    function determineLocalStorageAvailability(storage: any): any;
-
-    function expireCookies(cookieName: any): void;
-
-    function findPrevCookiesBasedOnUI(identityApiData: any): void;
-
-    function getAllUserAttributes(mpid: any): any;
-
-    function getAllUserProductsFromLS(): any;
-
-    function getCartProducts(mpid: any): any;
-
-    function getConsentState(mpid: any): any;
-
-    function getCookie(): any;
-
-    function getCookieDomain(): any;
-
-    function getDeviceId(): any;
-
-    function getFirstSeenTime(mpid: any): any;
-
-    function getLastSeenTime(mpid: any): any;
-
-    function getLocalStorage(): any;
-
-    function getPersistence(): any;
-
-    function getUserIdentities(mpid: any): any;
-
-    function getUserProductsFromLS(mpid: any): any;
-
-    function initializeStorage(): void;
-
-    function parseDeviceId(serverSettings: any): any;
-
-    function reduceAndEncodeCookies(cookies: any, expires: any, domain: any, maxCookieSize: any): any;
-
-    function replaceApostrophesWithQuotes(string: any): any;
-
-    function replaceCommasWithPipes(string: any): any;
-
-    function replacePipesWithCommas(string: any): any;
-
-    function replaceQuotesWithApostrophes(string: any): any;
-
-    function resetPersistence(): void;
-
-    function retrieveDeviceId(): any;
-
-    function revertCookieString(string: any): any;
-
-    function saveCookies(cookies: any): void;
-
-    function saveUserAttributesToCookies(mpid: any, userAttributes: any): void;
-
-    function saveUserConsentStateToCookies(mpid: any, consentState: any): void;
-
-    function saveUserCookieSyncDatesToCookies(mpid: any, csd: any): void;
-
-    function saveUserIdentitiesToCookies(mpid: any, userIdentities: any): void;
-
-    function setCartProducts(allProducts: any): void;
-
-    function setCookie(): void;
-
-    function setFirstSeenTime(mpid: any, time: any): void;
-
-    function setLastSeenTime(mpid: any, time: any): void;
-
-    function setLocalStorage(): void;
-
-    function storeDataInMemory(obj: any, currentMPID: any): void;
-
-    function update(): void;
-
-    function useLocalStorage(): any;
-
-}
-
-export namespace sessionManager {
-    function clearSessionTimeout(): void;
-
-    function endSession(override: any): void;
-
-    function getSession(): any;
-
-    function initialize(): void;
-
-    function resetSessionTimer(): void;
-
-    function setSessionTimer(): void;
-
-    function startNewSession(): void;
-
 }

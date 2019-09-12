@@ -22,35 +22,63 @@ export const CommerceEventType: {
     PromotionView: number;
 };
 
-export const config: {
-};
+interface config {
+    isDevelopmentMode?: boolean,
+    identifyRequest?: IdentifyRequest,
+    identityCallback?: Callback,
+    logLevel?: 'verbose' | 'warning' | 'none',
+    sessionTimeout?: number,
+    useCookieStorage?: boolean,
+    maxProducts?: number,
+    customFlags?: object,
+    workspaceToken?: string,
+    requiredWebviewBridgeName?: string,
+    minWebviewBridgeVersion?: number,
+    useNativeSdk?: boolean,
+    isIOS?: boolean,
+    appVersion?: string
+}
 
 export function endSession(): void;
 export function getAppName(): string;
 export function getAppVersion(): string;
 export function getDeviceId(): string;
-export function getIntegrationAttributes(integrationId: any): any;
 export function getVersion(): string;
-export function init(apiKey: string, config: any): void;
-export function logError(error: any, attrs: any): void;
-export function logEvent(eventName: string, eventType?: any, eventInfo?: any, customFlags?: any): void;
-export function logForm(selector: any, eventName: any, eventType: any, eventInfo: any): void;
-export function logLink(selector: any, eventName: any, eventType: any, eventInfo: any): void;
-export function logPageView(eventName: any, attrs: any, customFlags: any): void;
-export function ready(f: any): void;
+export function init(apiKey: string, config: config): void;
+export function logError(error: string | object, attrs?: object): void;
+export function logEvent(eventName: string, eventType?: number, eventInfo?: object, customFlags?: object): void;
+export function logForm(selector: string, eventName: string, eventType: number, eventInfo: object): void;
+export function logLink(selector: string, eventName: string, eventType: number, eventInfo: object): void;
+export function logPageView(eventName: string, attrs?: object, customFlags?: object): void;
+export function ready(func: () => any): void;
 export function setAppName(name: string): void;
 export function setAppVersion(version: string): void;
-export function setLogLevel(newLogLevel: string): void;
+export function setLogLevel(newLogLevel: 'verbose' | 'warning' | 'none'): void;
 export function setOptOut(isOptingOut: boolean): void;
 export function setPosition(lat: number, lng: number): void;
 export function setSessionAttribute(key: string, value: string | number | null): void;
 export function startNewSession(): void;
-export function startTrackingLocation(callback: ()=>any[]): void;
+export function startTrackingLocation(callback: () => location): void;
 export function stopTrackingLocation(): void;
 
 export namespace Consent {
-    function createConsentState(consentState: object): object;
-    function createGDPRConsent(consented: boolean, timestamp: number, consentDocument: string, location: string, hardwareId: string): object;
+    function createConsentState(): ConsentState;
+    function createGDPRConsent(consented: boolean, timestamp: number, consentDocument: string, location: string, hardwareId: string): GDPRConsentState;
+}
+
+interface ConsentState {
+    setGDPRConsentState: (gdprConsentState: GDPRConsentState) => ConsentState,
+    addGDPRConsentState: (purpose: string, gdprConsent: GDPRConsentState) => ConsentState,
+    getGDPRConsentState:() => GDPRConsentState,
+    removeGDPRConsentState: () => ConsentState
+}
+
+interface GDPRConsentState {
+    Consented: boolean,
+    Timestamp: number,
+    ConsentDocument: string,
+    Location: string,
+    HardwareId: string
 }
 
 export namespace EventType {
@@ -66,15 +94,17 @@ export namespace EventType {
 }
 
 export namespace Identity {
+    //todo alias users
     function aliasUsers(aliasRequest: any, callback: any): void;
     function createAliasRequest(sourceUser: any, destinationUser: any): any;
-    function getCurrentUser(): any;
-    function getUser(mpid: any): any;
-    function getUsers(): any;
-    function identify(identityApiData: any, callback: any): void;
-    function login(identityApiData: any, callback: any): void;
-    function logout(identityApiData: any, callback: any): void;
-    function modify(identityApiData: any, callback: any): void;
+    //
+    function getCurrentUser(): User;
+    function getUser(mpid: string): User;
+    function getUsers(): User[];
+    function identify(identityApiData: identityApiData, callback: Callback): void;
+    function login(identityApiData: identityApiData, callback: Callback): void;
+    function logout(identityApiData: identityApiData, callback: Callback): void;
+    function modify(identityApiData: identityApiData, callback: Callback): void;
 }
 
 export namespace IdentityType {
@@ -113,16 +143,16 @@ export namespace PromotionType {
 }
 
 export namespace eCommerce {
-    function createImpression(name: string, product: object): any;
-    function createProduct(name: string, sku: string, price: number, quantity: number, variant: string, category: string, brand: string, position: number, coupon: string, attributes: object): any;
-    function createPromotion(id: string, creative: string, name: string, position: number): any;
-    function createTransactionAttributes(id: string | number, affiliation: string, couponCode: string, revenue: number, shipping: string, tax: number): any;
+    function createImpression(name: string, product: Product): Impression;
+    function createProduct(name: string, sku: string, price: number, quantity?: number, variant?: string, category?: string, brand?: string, position?: number, coupon?: string, attributes?: object): Product;
+    function createPromotion(id: string, creative: string, name: string, position: number): Promotion;
+    function createTransactionAttributes(id: string | number, affiliation: string, couponCode: string, revenue: number, shipping: string, tax: number): transactionAttributes;
     function logCheckout(step: number, options: object, attrs: object, customFlags: object): void;
-    function logImpression(impression: object, attrs: object, customFlags: object): void;
-    function logProductAction(productActionType: number, product: object, attrs: object, customFlags: object): void;
-    function logPromotion(type: number, promotion: object, attrs: object, customFlags: object): void;
-    function logPurchase(transactionAttributes: object, product: object, clearCart: boolean, attrs: object, customFlags: object): void;
-    function logRefund(transactionAttributes: object, product: object, clearCart: boolean, attrs: object, customFlags: object): void;
+    function logImpression(impression: Impression, attrs: object, customFlags: object): void;
+    function logProductAction(productActionType: number, product: Product, attrs: object, customFlags: object): void;
+    function logPromotion(type: number, promotion: Promotion, attrs: object, customFlags: object): void;
+    function logPurchase(transactionAttributes: object, product: Product[] | Product, clearCart: boolean, attrs: object, customFlags: object): void;
+    function logRefund(transactionAttributes: transactionAttributes, product: Product, clearCart: boolean, attrs: object, customFlags: object): void;
     function setCurrencyCode(code: string): void;
 
     namespace Cart {
@@ -130,4 +160,94 @@ export namespace eCommerce {
         function clear(): void;
         function remove(product: object, logEventBoolean: boolean): void;
     }
+}
+
+interface IdentifyRequest {
+    userIdentities: UserIdentities
+}
+
+interface User {
+    getUserIdentities: () => UserIdentities,
+    getMPID: () => string,
+    setUserTag: (tag: string) => void,
+    removeUserTag: (tag: string) => void,
+    setUserAttribute: (key: string, value: string) => void,
+    setUserAttributes: (attributeObject: object) => void,
+    removeUserAttribute: (key: string) => void,
+    setUserAttributeList: (key: []) => void,
+    removeAllUserAttributes: () => void,
+    getUserAttributesLists: () => object,
+    getAllUserAttributes: () => object,
+    getCart: () => Cart,
+    getConsentState: () => ConsentState,
+    setConsentState: (ConsentState) => void,
+}
+
+interface UserIdentities {
+    customerid?: string,
+    email?: string,
+    other?: string,
+    other2?: string,
+    other3?: string,
+    other4?: string,
+    facebook?: string,
+    facebookcustomaudienceid?: string,
+    google?: string,
+    twitter?: string,
+    microsoft?: string,
+    yahoo?: string,
+}
+
+interface Cart {
+    add:(product: Product) => void,
+    remove:(product: Product) => void,
+    clear: () => void,
+    getCartProducts: () => Product[]
+}
+
+interface Product {
+    name: string,
+    sku: string,
+    price: number,
+    quantity?: number,
+    variant?: string,
+    category?: string,
+    brand?: string,
+    position?: number,
+    coupon?: string,
+    attributes?: object,
+}
+
+interface transactionAttributes {
+    Id: string | number,
+    Affiliation?: string,
+    CouponCode?: string,
+    Revenue?: number,
+    Shipping?: string,
+    Tax?: number,
+}
+
+interface Impression {
+    name: string,
+    product: Product
+}
+
+interface Promotion {
+    id: string,
+    creative?: string,
+    name?: string,
+    position?: number
+}
+
+interface identityApiData {
+    userIdentities: UserIdentities
+}
+
+interface Callback {
+    (): void;
+}
+
+interface location {
+    coords: object,
+    timestamp: number
 }
